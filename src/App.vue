@@ -1,11 +1,11 @@
 <script setup>
 import {ref, onMounted} from "vue"
-import {getElement, postElement, hello} from "@/services/api.js";
+import {getElement, postElement, fetchAll} from "@/services/api.js";
 const mouse_x = ref(0)
 const mouse_y = ref(0)
 const clicked = ref(false)
 const tool = ref("") //freehand, square, circle
-const color = ref("blue")
+const color = ref("#ffffff")
 const SAVES = 10
 
 let coordinates = []
@@ -153,7 +153,6 @@ const fetchElement = async function (){
   try{
     const e = await getElement({id:element_count})
     if (e==='OK'){
-      // console.log("element_count: "+ element_count)
     }
     else{
       console.log(e)
@@ -167,19 +166,34 @@ const fetchElement = async function (){
 
 }
 
-
-
 window.onload = function (){
   canvas = document.getElementById("canvas")
   ctx = canvas.getContext("2d")
   ctx.width = 1000
   saveImageData()
 }
+const fetchAllFirst = async function(){
+  try{
+    const e = await fetchAll()
+    if (e==='OK'){
+    }
+    else{
+      element_count = e.length;
+      for(let i=0; i<element_count; i++){
+        drawElement(e[i])
+      }
+    }
+  }
+  catch (err){
+    console.log('error fetch')
+  }
+}
 
+fetchAllFirst()
 window.addEventListener('mousemove', mouse_position)
 window.addEventListener('mousedown', mousedown)
 window.addEventListener('mouseup', mouseup)
-window.setInterval(fetchElement, 100);
+window.setInterval(fetchElement, 2000);
 
 //hello()
 
@@ -187,7 +201,7 @@ window.setInterval(fetchElement, 100);
 
 <template>
   <div class="container">
-    <canvas id="canvas" width="800" height="600"> </canvas>
+    <canvas id="canvas" width="1500" height="1000"> </canvas>
   </div>
   <button @click="undo">UNDO</button>
   <button @click='setTool("freehand")'>Freehand</button>
@@ -196,12 +210,13 @@ window.setInterval(fetchElement, 100);
 </template>
 
 <style scoped>
+
 .container {
   font-size: 50px;
 }
 canvas{
    top: 0;
    left: 0;
-   background-color: white;
+   background-color: #001515;
  }
 </style>

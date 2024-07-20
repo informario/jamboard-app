@@ -31,10 +31,10 @@ export const postElement = async(data) =>{
         throw err;
     }
 }
-export const hello = async()=>{
+export const fetchAll = async() =>{
     try{
-        const response = await api.get('/')
-        localStorage.setItem("user_id", response.data.user_id)
+        //const data = {user_id: localStorage.getItem('user_id')}
+        const response = await api.post('/fetchall')
         return response.data
     }
     catch(err){
