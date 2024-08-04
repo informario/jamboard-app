@@ -1,18 +1,16 @@
 <script setup>
 import {ref, onMounted} from "vue"
-import {getElement, postElement, fetchAll, deleteElement} from "@/services/api.js";
+import {getElement, postElement, fetchAll, deleteElement, restartCounting} from "@/services/api.js";
 const mouse_x = ref(0)
 const mouse_y = ref(0)
 const clicked = ref(false)
 const tool = ref("") //freehand, square, circle
 const color = ref("#ffffff")
-const SAVES = 10
 
 let coordinates = []
 let canvas
 let ctx
 let imagedata = []
-let elements = []
 
 const drawFreeHand = function(color, c, ctx, internal){
   if(c==null || color==null || ctx==null){
@@ -99,21 +97,9 @@ const mouse_position = function(){
 const mousedown = function (){
   if (mouse_x.value <canvas.width && mouse_y.value <canvas.height){
     clicked.value = true
-    saveImageData()
   }
 }
 
-const saveImageData = function(){
-  if(imagedata.length < SAVES){
-    imagedata.push(ctx.getImageData(0,0, canvas.width, canvas.height))
-  }
-  else{
-    for(let i=0; i<SAVES-1; i++){
-      imagedata[i]=imagedata[i+1]
-    }
-    imagedata[SAVES-1]=ctx.getImageData(0,0, canvas.width, canvas.height)
-  }
-}
 
 const mouseup = function (){
   clicked.value = false
@@ -126,23 +112,20 @@ const mouseup = function (){
       coords.push(coordinates[0])
       coords.push(coordinates[coordinates.length-1])
     }
-    elements.push({
+    postElement({
       color:color.value,
       tool:tool.value,
       coordinates:coords,
     })
-    console.log(elements[elements.length - 1])
-    postElement(elements[elements.length - 1])
   }
   coordinates = []
 }
 
 const undo = function(){
   deleteElement()
-  /*if(imagedata.length > 0){
-    ctx.putImageData(imagedata[imagedata.length-1],0,0)
-    imagedata.pop()
-  }*/
+  ctx.clearRect(0,0,canvas.width,canvas.height)
+  restartCounting()
+  //fetchElement()
 }
 
 const setTool = function(t){
@@ -169,14 +152,13 @@ window.onload = function (){
   canvas = document.getElementById("canvas")
   ctx = canvas.getContext("2d")
   ctx.width = 1000
-  saveImageData()
 }
 
 fetchElement()
 window.addEventListener('mousemove', mouse_position)
 window.addEventListener('mousedown', mousedown)
 window.addEventListener('mouseup', mouseup)
-window.setInterval(fetchElement, 3000);
+window.setInterval(fetchElement, 300);
 
 
 </script>

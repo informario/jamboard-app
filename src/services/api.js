@@ -9,14 +9,14 @@ const api = axios.create({
 
 export default api
 
-let my_ids = []
 let fetched = 0;
+const username = Math.random()
 
 export const getElement = async() =>{
     try{
         const response = await api.get(`/getelement/${fetched}`)
-        console.log(fetched)
-        if(Object.keys(response.data).length){
+        console.log(response.status)
+        if(response.status !== 204){
             fetched++
             return response.data
         }
@@ -29,11 +29,7 @@ export const getElement = async() =>{
 }
 export const postElement = async(data) =>{
     try{
-        const response = await api.post('/postelement', data)
-        if(response.status === 200){
-            my_ids.push(response.data.id)
-        }
-        console.log(my_ids)
+        const response = await api.post(`/postelement/${username}`, data)
         return response.data
     }
     catch(err){
@@ -43,7 +39,6 @@ export const postElement = async(data) =>{
 }
 export const fetchAll = async() =>{
     try{
-        //const data = {user_id: localStorage.getItem('user_id')}
         const response = await api.post('/fetchall')
         return response.data
     }
@@ -54,14 +49,16 @@ export const fetchAll = async() =>{
 }
 export const deleteElement = async() =>{
     try{
-        const response = await api.delete(`/element/${my_ids[my_ids.length-1]}`)
-        if(response.status === 200){
-            my_ids.pop()
-        }
+        const response = await api.delete(`/element/${username}`)
+
         return response.data
     }
     catch(err){
         console.error(err);
         throw err;
     }
+}
+export const restartCounting = async() => {
+    //let my_ids = []
+    fetched = 0
 }
