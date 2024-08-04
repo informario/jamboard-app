@@ -1,6 +1,6 @@
 <script setup>
 import {ref, onMounted} from "vue"
-import {getElement, postElement, fetchAll} from "@/services/api.js";
+import {getElement, postElement, fetchAll, deleteElement} from "@/services/api.js";
 const mouse_x = ref(0)
 const mouse_y = ref(0)
 const clicked = ref(false)
@@ -13,7 +13,6 @@ let canvas
 let ctx
 let imagedata = []
 let elements = []
-let element_count = 0;
 
 const drawFreeHand = function(color, c, ctx, internal){
   if(c==null || color==null || ctx==null){
@@ -139,10 +138,11 @@ const mouseup = function (){
 }
 
 const undo = function(){
-  if(imagedata.length > 0){
+  deleteElement()
+  /*if(imagedata.length > 0){
     ctx.putImageData(imagedata[imagedata.length-1],0,0)
     imagedata.pop()
-  }
+  }*/
 }
 
 const setTool = function(t){
@@ -151,13 +151,12 @@ const setTool = function(t){
 
 const fetchElement = async function (){
   try{
-    const e = await getElement({id:element_count})
-    if (e==='OK'){
+    const e = await getElement()
+    if (e===false){
     }
     else{
-      console.log(e)
-      element_count++;
       drawElement(e)
+      await fetchElement()
     }
   }
   catch (err){
@@ -172,30 +171,13 @@ window.onload = function (){
   ctx.width = 1000
   saveImageData()
 }
-const fetchAllFirst = async function(){
-  try{
-    const e = await fetchAll()
-    if (e==='OK'){
-    }
-    else{
-      element_count = e.length;
-      for(let i=0; i<element_count; i++){
-        drawElement(e[i])
-      }
-    }
-  }
-  catch (err){
-    console.log('error fetch')
-  }
-}
 
-fetchAllFirst()
+fetchElement()
 window.addEventListener('mousemove', mouse_position)
 window.addEventListener('mousedown', mousedown)
 window.addEventListener('mouseup', mouseup)
-window.setInterval(fetchElement, 2000);
+window.setInterval(fetchElement, 3000);
 
-//hello()
 
 </script>
 
