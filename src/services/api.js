@@ -16,9 +16,8 @@ export const getElement = async() =>{
     try{
         const response = await api.get(`/getelement/${fetched}`)
         if(response.status === 200){
-            fetched = fetched + response.data.length
-            //console.log(response.data.length)
-            return response.data
+            fetched+=response.data.size
+            return response.data.elements
         }
         return false
     }
