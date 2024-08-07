@@ -186,7 +186,7 @@ window.setInterval(fetchElement, 10000); //
 </script>
 
 <template>
-<template>
+
   <div class="container">
     <canvas id="canvas" width="1500" height="1000"> </canvas>
   </div>
