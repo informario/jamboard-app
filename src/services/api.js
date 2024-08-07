@@ -16,8 +16,8 @@ export const getElement = async() =>{
     try{
         const response = await api.get(`/getelement/${fetched}`)
         if(response.status === 200){
-            console.log(response.data.length)
             fetched = fetched + response.data.length
+            //console.log(response.data.length)
             return response.data
         }
         return false
@@ -48,6 +48,17 @@ export const deleteElement = async() =>{
         throw err;
     }
 }
+export const deleteAll = async() =>{
+    try{
+        const response = await api.delete(`/deleteall`)
+
+        return response.data
+    }
+    catch(err){
+        console.error(err);
+        throw err;
+    }
+}
 export const restartCounting = () => {
     //let my_ids = []
     fetched = 0
@@ -55,7 +66,17 @@ export const restartCounting = () => {
 
 export const update = async() =>{
     try{
-        const response = await api.get(`/update`)
+        const response = await api.get(`/update/${username}`)
+        return response.data
+    }
+    catch(err){
+        console.error(err);
+        throw err;
+    }
+}
+export const awake = async() =>{
+    try{
+        const response = await api.get(`/awake`)
         return response.data
     }
     catch(err){
