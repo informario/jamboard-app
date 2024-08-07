@@ -10,14 +10,14 @@ const api = axios.create({
 export default api
 
 let fetched = 0;
-const username = Math.random()
+const username = Math.random().toString()
 
 export const getElement = async() =>{
     try{
         const response = await api.get(`/getelement/${fetched}`)
-        console.log(response.status)
-        if(response.status !== 204){
-            fetched++
+        if(response.status === 200){
+            console.log(response.data.length)
+            fetched = fetched + response.data.length
             return response.data
         }
         return false
@@ -37,16 +37,6 @@ export const postElement = async(data) =>{
         throw err;
     }
 }
-export const fetchAll = async() =>{
-    try{
-        const response = await api.post('/fetchall')
-        return response.data
-    }
-    catch(err){
-        console.error(err);
-        throw err;
-    }
-}
 export const deleteElement = async() =>{
     try{
         const response = await api.delete(`/element/${username}`)
@@ -58,7 +48,18 @@ export const deleteElement = async() =>{
         throw err;
     }
 }
-export const restartCounting = async() => {
+export const restartCounting = () => {
     //let my_ids = []
     fetched = 0
+}
+
+export const update = async() =>{
+    try{
+        const response = await api.get(`/update`)
+        return response.data
+    }
+    catch(err){
+        console.error(err);
+        throw err;
+    }
 }

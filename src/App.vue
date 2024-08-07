@@ -1,6 +1,6 @@
 <script setup>
 import {ref, onMounted} from "vue"
-import {getElement, postElement, fetchAll, deleteElement, restartCounting} from "@/services/api.js";
+import {getElement, postElement, deleteElement, restartCounting, update} from "@/services/api.js";
 const mouse_x = ref(0)
 const mouse_y = ref(0)
 const clicked = ref(false)
@@ -33,7 +33,7 @@ const drawSquare = function(color, c, ctx, internal){
   const l = c.length-1
   ctx.fillStyle = color
   if(l>=1){
-    internal && ctx.putImageData(imagedata[imagedata.length-1],0,0)
+    internal && ctx.putImageData(imagedata,0,0)
     const x = c[0][0]
     const y = c[0][1]
     const w = c[l][0] - x
@@ -49,7 +49,7 @@ const drawCircle = function(color, c, ctx, internal){
   const l = c.length-1
   ctx.fillStyle = color
   if(l>=1){
-    internal && ctx.putImageData(imagedata[imagedata.length-1],0,0)
+    internal && ctx.putImageData(imagedata,0,0)
     const x = c[0][0]
     const y = c[0][1]
     const w = c[l][0] - x
@@ -97,9 +97,12 @@ const mouse_position = function(){
 const mousedown = function (){
   if (mouse_x.value <canvas.width && mouse_y.value <canvas.height){
     clicked.value = true
+    saveImageData()
   }
 }
-
+const saveImageData = function(){
+  imagedata=ctx.getImageData(0,0, canvas.width, canvas.height)
+}
 
 const mouseup = function (){
   clicked.value = false
@@ -138,12 +141,16 @@ const fetchElement = async function (){
     if (e===false){
     }
     else{
-      drawElement(e)
-      await fetchElement()
+      for (let i in e){
+        console.log(e[i])
+        drawElement(e[i])
+      }
+      //drawElement(e)
+      //await fetchElement()
     }
   }
   catch (err){
-    console.log('error fetch')
+    console.log('error fetch'+err)
   }
 
 }
@@ -154,11 +161,26 @@ window.onload = function (){
   ctx.width = 1000
 }
 
+const setUpdate = async function () {
+  let response = await update()
+  console.log("update response received")
+
+  if (response ==="delete"){
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    restartCounting()
+  }
+  else if (response ==="newelement"){
+  }
+  await fetchElement()
+  await setUpdate()
+}
+setUpdate()
 fetchElement()
+
 window.addEventListener('mousemove', mouse_position)
 window.addEventListener('mousedown', mousedown)
 window.addEventListener('mouseup', mouseup)
-window.setInterval(fetchElement, 300);
+//window.setInterval(fetchElement, 300);
 
 
 </script>
