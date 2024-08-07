@@ -180,11 +180,12 @@ fetchElement()
 window.addEventListener('mousemove', mouse_position)
 window.addEventListener('mousedown', mousedown)
 window.addEventListener('mouseup', mouseup)
-//window.setInterval(fetchElement, 300);
+window.setInterval(fetchElement, 10000); //
 
 
 </script>
 
+<template>
 <template>
   <div class="container">
     <canvas id="canvas" width="1500" height="1000"> </canvas>
