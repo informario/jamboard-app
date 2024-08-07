@@ -10,7 +10,7 @@
 
   onMounted(async () => {
     await awake()
-    router.push('/drawing');
+    router.push('/login');
   });
 </script>
 
@@ -20,7 +20,7 @@
     <div class="login-box">
       <h1 class="title">waiting for spinup</h1>
       <img class="image" src="/src/components/icons/loading-thinking.gif" alt="Loading..">
-      <p>please hold on until my free instance of render starts</p>
+      <p>Please hold on until my free instance of Render starts</p>
     </div>
   </div>
 

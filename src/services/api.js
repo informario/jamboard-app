@@ -10,7 +10,7 @@ const api = axios.create({
 export default api
 
 let fetched = 0;
-const username = Math.random().toString()
+const username = localStorage.getItem('username')
 
 export const getElement = async() =>{
     try{
@@ -60,7 +60,6 @@ export const deleteAll = async() =>{
     }
 }
 export const restartCounting = () => {
-    //let my_ids = []
     fetched = 0
 }
 
