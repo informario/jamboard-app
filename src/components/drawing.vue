@@ -181,8 +181,8 @@ const setUpdate = async function () {
   }
   else if (response ==="newelementOccurred"){
   }
+  setUpdate()
   await fetchElement()
-  setTimeout(()=>{setUpdate()}, 1000)
 
 }
 
