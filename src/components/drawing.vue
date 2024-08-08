@@ -111,7 +111,7 @@ const saveImageData = function(){
 
 const mouseup = async function () {
   clicked.value = false
-  if (mouse_x.value < canvas.width && mouse_y.value < canvas.height && tool.value !== "") {
+  if (tool.value !== "" && coordinates.length > 2) {
     let coords = []
     if (tool.value === 'freehand') {
       coords = coordinates
@@ -127,6 +127,9 @@ const mouseup = async function () {
       thickness: thickness.value,
     })
     //console.log("elementPosted")
+  }
+  else{
+    console.log("click")
   }
   coordinates = []
 }
@@ -154,6 +157,7 @@ const setColor = function(t){
 const fetchElement = async function (){
   try{
     const e = await getElement()
+    //console.log(e)
     if (e===false){
     }
     else{
