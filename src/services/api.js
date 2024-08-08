@@ -11,10 +11,11 @@ export default api
 
 let fetched = 0;
 const username = localStorage.getItem('username')
+let updateVersion = 0;
 
 export const getElement = async() =>{
     try{
-        const response = await api.get(`/getelement/${fetched}`)
+        const response = await api.get(`/getelement/${0}`)
         if(response.status === 200){
             fetched+=response.data.size
             return response.data.elements
@@ -64,8 +65,12 @@ export const restartCounting = () => {
 
 export const update = async() =>{
     try{
-        const response = await api.get(`/update/${username}`)
-        return response.data
+        console.log(`awaiting update, version:${updateVersion}`)
+        const response = await api.get(`/update/${username}/${updateVersion}`)
+        updateVersion = response.data.version
+        console.log(`received update, data: ${response.data.data}`)
+        return response.data.data
+
     }
     catch(err){
         console.error(err);

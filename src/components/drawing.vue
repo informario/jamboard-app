@@ -174,24 +174,21 @@ const download = function(){
 const setUpdate = async function () {
 
   let response = await update()
-
-  setUpdate()
-
-  if (response ==="delete"){
+  if (response ==="deleteOccurred"){
     restartCounting()
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
-  else if (response ==="newelement"){
+  else if (response ==="newelementOccurred"){
   }
-
   await fetchElement()
+  setTimeout(()=>{setUpdate()}, 1000)
+
 }
 
 window.addEventListener('mousemove', mouse_position)
 window.addEventListener('mousedown', mousedown)
 window.addEventListener('mouseup', mouseup)
-window.setInterval(fetchElement, 10000); //
 
 onMounted(()=>{
   canvas = document.getElementById("canvas")
@@ -200,9 +197,7 @@ onMounted(()=>{
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 })
 
-
 setUpdate()
-fetchElement()
 
 </script>
 
