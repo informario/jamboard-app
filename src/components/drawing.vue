@@ -172,7 +172,13 @@ const fetchElement = async function (){
 
 }
 const download = function(){
-  window.location.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+  const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+  const link = document.createElement('a');
+  link.href = image
+  link.download = 'dibujo.png';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 const setUpdate = async function () {
